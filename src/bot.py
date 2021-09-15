@@ -16,6 +16,12 @@ async def process_start_command(message: types.Message):
 async def process_help_command(message: types.Message):
     await message.reply("Напиши мне что-нибудь, и я отпрпавлю этот текст тебе в ответ!")
 
+
+@dp.message_handler(commands=['end'])
+async def process_start_command(message: types.Message):
+    await message.reply("Ну всё, так всё!")
+
+
 @dp.message_handler()
 async def echo_message(msg: types.Message):
     await bot.send_message(msg.from_user.id, msg.text)
