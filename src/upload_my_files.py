@@ -39,7 +39,7 @@ async def uploadMediaFiles(folder, method, file_attr):
 
         logging.info(f'Started processing {filename}')
         with open(os.path.join(folder_path, filename), 'rb') as file:
-            msg = await method(MY_ID, file, disable_notification=True)
+            msg = await method(ADMIN_ID, file, disable_notification=True)
             if file_attr == 'photo':
                 file_id = msg.photo[-1].file_id
             else:
