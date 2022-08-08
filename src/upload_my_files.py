@@ -6,9 +6,15 @@ from aiogram import Bot
 # from sqlalchemy.orm import scoped_session, sessionmaker
 
 # from db_map import Base, MediaIds
-from config import TOKEN, ADMIN_ID, DB_FILENAME
+import environ
 
 
+env = environ.Env(
+    # set casting, default value
+    ADMIN=(int, 0)
+)
+
+environ.Env.read_env()
 
 logging.basicConfig(format=u'%(filename)s [ LINE:%(lineno)+3s ]#%(levelname)+8s [%(asctime)s]  %(message)s',
                     level=logging.DEBUG)
@@ -17,7 +23,7 @@ logging.basicConfig(format=u'%(filename)s [ LINE:%(lineno)+3s ]#%(levelname)+8s 
 # engine = create_engine(f'sqlite:///{DB_FILENAME}')
 
 
-if not os.path.isfile(f'./{DB_FILENAME}'):
+if not os.path.isfile(f'./{env('DB_FILENAME')}'):
     Base.metadata.create_all(engine)
 
 
@@ -25,7 +31,7 @@ if not os.path.isfile(f'./{DB_FILENAME}'):
 # Session = scoped_session(session_factory)
 
 
-bot = Bot(token=TOKEN)
+bot = Bot(token=env('TOKEN'))
 
 
 BASE_MEDIA_PATH = './demo-media'
@@ -39,7 +45,7 @@ async def uploadMediaFiles(folder, method, file_attr):
 
         logging.info(f'Started processing {filename}')
         with open(os.path.join(folder_path, filename), 'rb') as file:
-            msg = await method(ADMIN_ID, file, disable_notification=True)
+            msg = await method(env('ADMIN'), file, disable_notification=True)
             if file_attr == 'photo':
                 file_id = msg.photo[-1].file_id
             else:
