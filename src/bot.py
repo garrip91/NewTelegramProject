@@ -2,10 +2,17 @@ from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 
-from config import TOKEN
+import environ
+
+env = environ.Env(
+    # set casting, default value
+    ADMIN=(int, 0)
+)
+
+environ.Env.read_env()
 
 
-bot = Bot(token=TOKEN)
+bot = Bot(token=env('TOKEN'))
 dp = Dispatcher(bot)
 
 @dp.message_handler(commands=['start'])
